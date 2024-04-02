@@ -1,0 +1,34 @@
+!/usr/bin/env python
+import time
+from flyt_python import api
+
+# Take user input for side length and height of the square
+side_length = float(input("Enter the side length of the square: "))
+height = float(input("Enter the height for the Drone: "))
+MPC_LAND_SPEED=3.0
+
+# Initialize the drone and navigation object
+drone = api.navigation(timeout=120000)
+
+# Sleep for 3 seconds for the drone interface to initialize properly
+time.sleep(3)
+
+print('Taking off')
+drone.take_off(5.0)
+#Wait for the drone tro stabilize at the input Height
+time.sleep(20)
+# Move the drone along the square at the specified height
+print('Moving along the square setpoints')
+drone.position_set(side_length, 0, 0, relative=True, async=False)
+drone.position_set(0, side_length, 0, relative=True, async=False)
+drone.position_set(-side_length,0, 0, relative=True, async=False)
+drone.position_set(0, -side_length,0, relative=True, async=False)
+
+print('Landing')
+# Land the drone
+drone.land(async=False)
+time.sleep(300)
+#Wait for the Drone to land
+
+drone.disconnect()
+

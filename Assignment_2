@@ -1,0 +1,43 @@
+!/usr/bin/env python
+import time
+from flyt_python import api
+
+# Take user input for side length and height of the square
+side_length = float(input("Enter the side length of the triangle: "))
+height = float(input("Enter the height for the Drone: "))
+Yaw=float(2.094)
+LNDMC_Z_VEL_MAX = float(3.0)
+MPC_LAND_SPEED=float(5.0)
+# Initialize the drone and navigation object
+drone = api.navigation(timeout=120000)
+
+# Sleep for 3 seconds for the drone interface to initialize properly
+time.sleep(3)
+
+print('Taking off')
+drone.take_off(5.0)
+
+# Move the drone along the square at the specified height
+print('Moving along the Triangle setpoints')
+
+drone.position_set(side_length,0, 0,body_frame=True)
+drone.position_set(0,0,0,yaw=Yaw,yaw_valid=True,body_frame=True)
+#Body Co-ordinate frame is used for simulation
+print('Setpoint 1 Achieved')
+
+drone.position_set(side_length,0, 0,body_frame=True)
+drone.position_set(0,0,0,yaw=Yaw,yaw_valid=True,body_frame=True)
+print('Setpoint 2 Achieved')
+
+drone.position_set(side_length,0, 0,body_frame=True)
+drone.position_set(0,0,0,yaw=Yaw,yaw_valid=True,body_frame=True)
+print('Setpoint 3 Achieved')
+
+
+print('Landing')
+# Land the drone
+drone.land(async=False)
+time.sleep(300)
+
+drone.disconnect()
+
